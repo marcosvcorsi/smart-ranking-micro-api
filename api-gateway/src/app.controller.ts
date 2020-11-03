@@ -1,12 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices'
+import { CreateCategoryDto } from './dtos/categories/create-category.dto';
 
-@Controller()
+@Controller('api/v1')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private clienteAdminServer : ClientProxy;
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  constructor() {
+    this.clienteAdminServer = ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [process.env.RMQ_URL],
+        queue: 'admin-server'
+      }
+    })
+  }
+
+  @Post('categories')
+  @UsePipes(ValidationPipe)
+  async createCategory(@Body() createCategoryDto: CreateCategoryDto): Promise<void> {
+    return this.clienteAdminServer.emit('create-category', createCategoryDto).toPromise();
   }
 }

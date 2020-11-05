@@ -1,5 +1,5 @@
 import { Controller, Logger } from "@nestjs/common";
-import { EventPattern, MessagePattern, Payload } from "@nestjs/microservices";
+import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
 import { CreateCategoryDto } from "src/dtos/create-category.dto";
 import { CategoriesService } from "src/services/categories.service";
 
@@ -10,10 +10,14 @@ export class CategoriesController {
   logger = new Logger(CategoriesController.name);
 
   @EventPattern('create-category')
-  async create(@Payload() createCategoryDto: CreateCategoryDto) {
+  async create(@Payload() createCategoryDto: CreateCategoryDto, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+
     this.logger.log(createCategoryDto);
 
-    return await this.categoriesService.create(createCategoryDto);
+    await this.categoriesService.create(createCategoryDto);
+    await channel.ack(originalMessage);
   }
 
   @MessagePattern('find-categories')

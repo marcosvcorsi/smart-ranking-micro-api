@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
+import { PlayersModule } from './players/players.module';
 
 @Module({
   imports: [
@@ -8,7 +9,8 @@ import { CategoriesModule } from './categories/categories.module';
       envFilePath: '.env',
       isGlobal: true
     }),
-    CategoriesModule
+    CategoriesModule,
+    PlayersModule
   ],
   controllers: [],
   providers: [],

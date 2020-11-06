@@ -31,7 +31,7 @@ export class CategoriesRepository {
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<void> {
-    return this.categoryModel.update({ _id: id}, {$set: updateCategoryDto})
+    return this.categoryModel.updateOne({ _id: id}, {$set: updateCategoryDto})
   }
 
   async addPlayerToCategory(playerId: string, categoryId: string, category: Category): Promise<void> {

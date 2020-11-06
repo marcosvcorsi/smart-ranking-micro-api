@@ -1,4 +1,3 @@
-
 import { Event } from "../models/category.schema";
 
 export class UpdateCategoryDto {

@@ -1,8 +1,8 @@
 import { Controller, Logger } from "@nestjs/common";
-import { Ctx, EventPattern, MessagePattern, Payload, RmqContext, ServerMqtt } from "@nestjs/microservices";
-import { CreateCategoryDto } from "src/dtos/create-category.dto";
-import { UpdateCategoryDto } from "src/dtos/update-category.dto";
-import { CategoriesService } from "src/services/categories.service";
+import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
+import { CreateCategoryDto } from "../dtos/create-category.dto";
+import { UpdateCategoryDto } from "../dtos/update-category.dto";
+import { CategoriesService } from "../services/categories.service";
 
 @Controller()
 export class CategoriesController {

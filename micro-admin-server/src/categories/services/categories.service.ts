@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PlayersService } from './players.service';
 import { AddCategoryPlayerDto } from '../dtos/add-category-player.dto';
 import { CreateCategoryDto } from '../dtos/create-category.dto';
 import { UpdateCategoryDto } from '../dtos/update-category.dto';
 import { Category } from '../models/category.schema';
 import { CategoriesRepository } from '../repositories/categories.repository';
 import { RpcException } from '@nestjs/microservices';
+import { PlayersService } from 'src/players/services/players.service';
 
 @Injectable()
 export class CategoriesService {

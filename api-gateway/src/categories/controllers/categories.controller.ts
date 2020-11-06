@@ -7,21 +7,21 @@ import { UpdateCategoryDto } from '../dtos/update-category.dto';
 @Controller('api/v1/categories')
 export class CategoriesController {
 
-  constructor(private readonly clienteProxyProvider: ClientProxyProvider) {}
+  constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
 
   @Post()
   @UsePipes(ValidationPipe)
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    this.clienteProxyProvider.getInstance().emit('create-category', createCategoryDto);
+    this.clientProxyProvider.getInstance().emit('create-category', createCategoryDto);
   }
 
   @Get()
   findAllCategories(@Query('id') id: string): Observable<any> {
-    return this.clienteProxyProvider.getInstance().send('find-categories', id || '')
+    return this.clientProxyProvider.getInstance().send('find-categories', id || '')
   }
 
   @Put(':id')
   updateCategory(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    this.clienteProxyProvider.getInstance().emit('update-category', { id, ...updateCategoryDto })
+    this.clientProxyProvider.getInstance().emit('update-category', { id, ...updateCategoryDto })
   }
 }

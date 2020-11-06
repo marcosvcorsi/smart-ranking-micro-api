@@ -12,7 +12,5 @@ import { PlayersModule } from './players/players.module';
     CategoriesModule,
     PlayersModule
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

@@ -51,4 +51,14 @@ export class PlayersController {
 
     await channel.ack(originalMessage);
   }
+
+  @MessagePattern('delete-player')
+  async delete(@Payload() id: string, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+
+    await this.playersService.deleteById(id);
+
+    await channel.ack(originalMessage);
+  }
 }

@@ -44,9 +44,9 @@ export class CategoriesController {
 
     this.logger.log(updateCategoryDto);
 
-    const { id } = updateCategoryDto;
+    const { id, description, events } = updateCategoryDto;
 
-    await this.categoriesService.update(id, updateCategoryDto)
+    await this.categoriesService.update(id, { description, events })
     await channel.ack(originalMessage);
   }
 }

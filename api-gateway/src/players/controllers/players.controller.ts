@@ -4,7 +4,7 @@ import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider'
 import { CreatePlayerDto } from '../dtos/create-player.dto';
 import { UpdatePlayerDto } from '../dtos/update-player.dto';
 
-@Controller('players')
+@Controller('api/v1/players')
 export class PlayersController {
 
   constructor(private readonly clientProxyProvider: ClientProxyProvider) {}

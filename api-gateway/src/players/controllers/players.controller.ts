@@ -1,5 +1,7 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Observable } from 'rxjs';
+import { AwsService } from 'src/aws/services/aws.service';
 import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
 import { CreatePlayerDto } from '../dtos/create-player.dto';
 import { UpdatePlayerDto } from '../dtos/update-player.dto';
@@ -7,7 +9,10 @@ import { UpdatePlayerDto } from '../dtos/update-player.dto';
 @Controller('api/v1/players')
 export class PlayersController {
 
-  constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
+  constructor(
+    private readonly clientProxyProvider: ClientProxyProvider,
+    private readonly awsService: AwsService
+  ) {}
 
   @Get()
   findAllPlayers(): Observable<any> {
@@ -46,5 +51,13 @@ export class PlayersController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     await this.clientProxyProvider.getInstance().emit('delete-player', id).toPromise();
+  }
+
+  @Post(':id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@Param('id') id: string, @UploadedFile() file) {
+    const url = await this.awsService.uploadFile(file, id);
+    
+    console.log(url);
   }
 }

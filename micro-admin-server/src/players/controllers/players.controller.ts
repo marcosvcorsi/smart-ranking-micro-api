@@ -1,6 +1,7 @@
 import { Controller, Logger } from "@nestjs/common";
 import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
 import { CreatePlayerDto } from "../dtos/create-player.dto";
+import { UpdatePlayerDto } from "../dtos/update-player.dto";
 import { PlayersService } from "../services/players.service";
 
 @Controller()
@@ -33,6 +34,20 @@ export class PlayersController {
     this.logger.log(JSON.stringify(createPlayerDto));
 
     await this.playersService.create(createPlayerDto);
+
+    await channel.ack(originalMessage);
+  }
+
+  @MessagePattern('update-player')
+  async update(@Payload() updatePlayerDto: UpdatePlayerDto, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+
+    this.logger.log(JSON.stringify(updatePlayerDto));
+
+    const { id, name, phoneNumber, category } = updatePlayerDto;
+
+    await this.playersService.update(id, { name, phoneNumber, category })
 
     await channel.ack(originalMessage);
   }

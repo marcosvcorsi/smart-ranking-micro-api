@@ -1,4 +1,21 @@
-import { Controller } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
 
 @Controller('challenges')
-export class ChallengesController {}
+export class ChallengesController {
+
+  constructor(private clientProxyProvider: ClientProxyProvider) {}
+
+  @Get()
+  async findAll(@Query('player') playerId: string) {
+    if(playerId) {
+      const player = await this.clientProxyProvider.getAdminServerInstance().send('find-player', playerId).toPromise();
+
+      if(!player) {
+        throw new BadRequestException('Player not found')
+      }
+    }
+
+    return this.clientProxyProvider.getChallengeInstance().send('find-challenges', { playerId }).toPromise();
+  }
+}

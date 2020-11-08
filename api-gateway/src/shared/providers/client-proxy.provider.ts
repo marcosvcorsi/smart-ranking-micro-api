@@ -7,12 +7,22 @@ export class ClientProxyProvider {
 
   constructor(private readonly configService: ConfigService) {}
 
-  getInstance() {
+  getAdminServerInstance() {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
         urls: [this.configService.get<string>('RMQ_URL')],
         queue: 'admin-server'
+      }
+    })
+  }
+
+  getChallengeInstance() {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [this.configService.get<string>('RMQ_URL')],
+        queue: 'challenges'
       }
     })
   }

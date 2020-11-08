@@ -12,16 +12,16 @@ export class CategoriesController {
   @Post()
   @UsePipes(ValidationPipe)
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    this.clientProxyProvider.getInstance().emit('create-category', createCategoryDto);
+    this.clientProxyProvider.getAdminServerInstance().emit('create-category', createCategoryDto);
   }
 
   @Get()
   findAllCategories(@Query('id') id: string): Observable<any> {
-    return this.clientProxyProvider.getInstance().send('find-categories', id || '')
+    return this.clientProxyProvider.getAdminServerInstance().send('find-categories', id || '')
   }
 
   @Put(':id')
   updateCategory(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    this.clientProxyProvider.getInstance().emit('update-category', { id, ...updateCategoryDto })
+    this.clientProxyProvider.getAdminServerInstance().emit('update-category', { id, ...updateCategoryDto })
   }
 }

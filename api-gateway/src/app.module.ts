@@ -7,7 +7,6 @@ import { AwsModule } from './aws/aws.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true
     }),
     CategoriesModule,

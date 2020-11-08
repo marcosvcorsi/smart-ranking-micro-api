@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class AwsService {
 
+  constructor(private readonly configService: ConfigService) {}
+
   public async uploadFile(file: any, id: string) {
     const s3 = new AWS.S3({
-      region: process.env.AWS_REGION,
-      accessKeyId: process.env.AWS_KEY,
-      secretAccessKey: process.env.AWS_SECRET
+      region: this.configService.get<string>('AWS_REGION'),
+      accessKeyId: this.configService.get<string>('AWS_KEY'),
+      secretAccessKey: this.configService.get<string>('AWS_SECRET')
     })
 
     const [,fileExt] = file.originalname.split('.');
 
-    const bucketName = process.env.AWS_BUCKET_NAME;
+    const bucketName = this.configService.get<string>('AWS_BUCKET_NAME');
     const urlKey = `${id}.${fileExt}`
 
     await s3.putObject({

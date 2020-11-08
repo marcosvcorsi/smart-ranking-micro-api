@@ -1,6 +1,5 @@
 export class UpdatePlayerDto {
   id?: string;
-  phoneNumber: string;
-  name: string;
-  category: string;
+  category?: string;
+  imgUrl?: string;
 }

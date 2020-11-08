@@ -45,9 +45,12 @@ export class PlayersController {
 
     this.logger.log(JSON.stringify(updatePlayerDto));
 
-    const { id, name, phoneNumber, category } = updatePlayerDto;
+    const { id, category, imgUrl } = updatePlayerDto;
 
-    await this.playersService.update(id, { name, phoneNumber, category })
+    await this.playersService.update(id, { 
+      ...(category ? { category } : {}), 
+      ...(imgUrl ? { imgUrl } : {}) 
+    })
 
     await channel.ack(originalMessage);
   }

@@ -56,8 +56,14 @@ export class PlayersController {
   @Post(':id/upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@Param('id') id: string, @UploadedFile() file) {
-    const url = await this.awsService.uploadFile(file, id);
+    const player = await this.clientProxyProvider.getInstance().send('find-players', id).toPromise();
+
+    if(!player) {
+      throw new BadRequestException('Player not found')
+    }
+
+    const imgUrl = await this.awsService.uploadFile(file, id);
     
-    console.log(url);
+    await this.clientProxyProvider.getInstance().emit('update-player', { id, imgUrl }).toPromise()
   }
 }

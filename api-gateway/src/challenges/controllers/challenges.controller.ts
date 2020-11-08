@@ -1,6 +1,8 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
+import { StatusChallenge } from '../dtos/challenge.dto';
 import { CreateChallengeDto } from '../dtos/create-challenge.dto';
+import { UpdateChallengeDto } from '../dtos/update-challenge.dto';
 
 @Controller('challenges')
 export class ChallengesController {
@@ -61,5 +63,20 @@ export class ChallengesController {
     }
 
     await this.clientProxyProvider.getChallengeInstance().emit('create-challenge', createChallengeDto).toPromise();
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateChallengeDto: UpdateChallengeDto) {
+    const challenge = await this.clientProxyProvider.getChallengeInstance().send('find-challenges', { id }).toPromise();
+
+    if(!challenge) {
+      throw new BadRequestException('Challenge not found');
+    }
+
+    if(challenge.status !== StatusChallenge.WAITING) {
+      throw new BadRequestException('Only waiting challenges can be updated')
+    }
+
+    await this.clientProxyProvider.getChallengeInstance().emit('update-challenge', { id, ... updateChallengeDto }).toPromise();
   }
 }

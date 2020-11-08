@@ -8,6 +8,6 @@ export class MatchDto {
   category: string;
   challenge: string;
   players: Array<PlayerDto>
-  def: PlayerDto;
+  def: string;
   results: Array<Result>
 }

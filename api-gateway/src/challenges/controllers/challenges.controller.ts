@@ -1,7 +1,9 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
+import { AddChallengeMatchDto } from '../dtos/add-challenge-match.dto';
 import { StatusChallenge } from '../dtos/challenge.dto';
 import { CreateChallengeDto } from '../dtos/create-challenge.dto';
+import { MatchDto } from '../dtos/match.dto';
 import { UpdateChallengeDto } from '../dtos/update-challenge.dto';
 
 @Controller('challenges')
@@ -78,5 +80,36 @@ export class ChallengesController {
     }
 
     await this.clientProxyProvider.getChallengeInstance().emit('update-challenge', { id, ... updateChallengeDto }).toPromise();
+  }
+
+  @Post(':id/match')
+  async addChallengeMatch(@Param('id') id: string, @Body() addChallengeMatchDto: AddChallengeMatchDto) {
+    const challenge = await this.clientProxyProvider.getChallengeInstance().send('find-challenges', { id }).toPromise();
+
+    if(!challenge) {
+      throw new BadRequestException('Challenge not found');
+    }
+
+    if(challenge.status === StatusChallenge.DONE) {
+      throw new BadRequestException('Challenge already done')
+    }
+
+    if(challenge.status !== StatusChallenge.ACCEPTED) {
+      throw new BadRequestException('The challenge was not accepted')
+    }
+
+    if(!challenge.players.includes(addChallengeMatchDto.def)) {
+      throw new BadRequestException('The winner should be part of challenge')
+    }
+
+    const match = new MatchDto();
+
+    match.category = challenge.category;
+    match.def = addChallengeMatchDto.def;
+    match.challenge =id;
+    match.players = challenge.players;
+    match.results = addChallengeMatchDto.results;
+
+    await this.clientProxyProvider.getChallengeInstance().emit('create-match', match).toPromise();
   }
 }

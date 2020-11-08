@@ -6,7 +6,7 @@ export class AwsService {
 
   public async uploadFile(file: any, id: string) {
     const s3 = new AWS.S3({
-      region: 'us-east-1',
+      region: process.env.AWS_REGION,
       accessKeyId: process.env.AWS_KEY,
       secretAccessKey: process.env.AWS_SECRET
     })

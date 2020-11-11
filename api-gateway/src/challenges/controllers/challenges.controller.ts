@@ -6,7 +6,7 @@ import { CreateChallengeDto } from '../dtos/create-challenge.dto';
 import { MatchDto } from '../dtos/match.dto';
 import { UpdateChallengeDto } from '../dtos/update-challenge.dto';
 
-@Controller('challenges')
+@Controller('api/v1/challenges')
 export class ChallengesController {
 
   constructor(private clientProxyProvider: ClientProxyProvider) {}

@@ -41,7 +41,7 @@ export class ChallengesController {
     const players = await this.clientProxyProvider.getAdminServerInstance().send('find-players', '').toPromise();
 
     createChallengeDto.players.map(player => {
-      const findPlayer = players.find(item => String(item.id) === player);
+      const findPlayer = players.find(item => String(item._id) === player);
 
       if(!findPlayer) {
         throw new BadRequestException(`Player ${player} not found`);

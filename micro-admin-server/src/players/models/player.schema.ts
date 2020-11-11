@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export type PlayerDocument = Player & Document;
 
@@ -22,6 +22,9 @@ export class Player {
 
   @Prop()
   imgUrl: string;
+
+  @Prop({type: Types.ObjectId, ref: 'Category'})
+  category: Types.ObjectId;
 }
 
 export const PlayerSchema = SchemaFactory.createForClass(Player);

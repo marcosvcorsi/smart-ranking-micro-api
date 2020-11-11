@@ -14,7 +14,7 @@ export class ChallengesController {
   @Get()
   async findAll(@Query('player') playerId: string) {
     if(playerId) {
-      const player = await this.clientProxyProvider.getAdminServerInstance().send('find-player', playerId).toPromise();
+      const player = await this.clientProxyProvider.getAdminServerInstance().send('find-players', playerId).toPromise();
 
       if(!player) {
         throw new BadRequestException('Player not found')
@@ -32,7 +32,7 @@ export class ChallengesController {
       throw new BadRequestException('Challenge not found');
     }
 
-    await this.clientProxyProvider.getChallengeInstance().emit('delete-challenge', challenge).toPromise();
+    await this.clientProxyProvider.getChallengeInstance().emit('delete-challenge', {id, challenge}).toPromise();
   }
 
   @Post()
@@ -79,7 +79,7 @@ export class ChallengesController {
       throw new BadRequestException('Only waiting challenges can be updated')
     }
 
-    await this.clientProxyProvider.getChallengeInstance().emit('update-challenge', { id, ... updateChallengeDto }).toPromise();
+    await this.clientProxyProvider.getChallengeInstance().emit('update-challenge', { id, challenge: updateChallengeDto}).toPromise();
   }
 
   @Post(':id/match')

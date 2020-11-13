@@ -7,6 +7,10 @@ export class RankingsService {
   constructor(private readonly rankingsRepository: RankingsRepository) {}
 
   async processMatch(matchId: string, match: any) {
-    console.log(matchId, match);
+    const promises = match.players.map(async player => {
+      return this.rankingsRepository.create(match, matchId, player);
+    })
+
+    await Promise.all(promises);
   }
 }

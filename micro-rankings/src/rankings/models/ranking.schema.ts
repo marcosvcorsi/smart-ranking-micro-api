@@ -9,13 +9,13 @@ export class Ranking {
   challenge: Types.ObjectId;
 
   @Prop({type: Types.ObjectId})
-  player: string;
+  player: Types.ObjectId;
 
   @Prop({type: Types.ObjectId})
-  match: string;
+  match: Types.ObjectId;
 
   @Prop({type: Types.ObjectId})
-  category: string;
+  category: Types.ObjectId;
 
   @Prop()
   event: string;

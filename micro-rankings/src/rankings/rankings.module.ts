@@ -3,6 +3,7 @@ import { RankingsService } from './services/rankings.service';
 import { RankingsController } from './controllers/rankings.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Ranking, RankingSchema } from './models/ranking.schema';
+import { RankingsRepository } from './repositories/rankings.repository';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { Ranking, RankingSchema } from './models/ranking.schema';
       }
     ])
   ],
-  providers: [RankingsService],
+  providers: [RankingsService, RankingsRepository],
   controllers: [RankingsController]
 })
 export class RankingsModule {}

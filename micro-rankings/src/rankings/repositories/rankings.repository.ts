@@ -3,12 +3,21 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { RankingDocument } from "../models/ranking.schema";
 
+type CreateRanking = {
+  match: any;
+  matchId: string;
+  player: string;
+  name: string;
+  value: number;
+  operation: string;
+}
+
 @Injectable()
 export class RankingsRepository {
 
   constructor(@InjectModel('Ranking') private readonly rankingModel: Model<RankingDocument>) {}
 
-  async create(match: any, matchId: string, player: string) {
+  async create({ match, matchId, player, value, operation, name }: CreateRanking) {
     const ranking =  new this.rankingModel();
 
     ranking.category = match.category;
@@ -16,15 +25,9 @@ export class RankingsRepository {
     ranking.match = Types.ObjectId(matchId);
     ranking.player = Types.ObjectId(player);
 
-    if(player === match.def) {
-      ranking.event = 'V';
-      ranking.points = 30;
-      ranking.operation = '+';
-    } else {
-      ranking.event = 'D';
-      ranking.points = 0;
-      ranking.operation = '+';
-    }
+    ranking.event = name;
+    ranking.points = value;
+    ranking.operation = operation;
 
     await ranking.save()
   }

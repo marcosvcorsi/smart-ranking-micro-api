@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RankingsModule } from './rankings/rankings.module';
+import { ClientProxyModule } from './shared/modules/client-proxy.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { RankingsModule } from './rankings/rankings.module';
       useCreateIndex: true,
       useFindAndModify: false,
     }),
+    ClientProxyModule,
     RankingsModule
   ],
   controllers: [],

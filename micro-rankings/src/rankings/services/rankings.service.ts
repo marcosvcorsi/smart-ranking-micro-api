@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { RankingsRepository } from '../repositories/rankings.repository';
 
 @Injectable()
@@ -7,10 +8,13 @@ export class RankingsService {
   constructor(private readonly rankingsRepository: RankingsRepository) {}
 
   async processMatch(matchId: string, match: any) {
-    const promises = match.players.map(async player => {
-      return this.rankingsRepository.create(match, matchId, player);
-    })
-
-    await Promise.all(promises);
+    try {
+      await Promise.all(match.players.map(async player => {
+          return this.rankingsRepository.create(match, matchId, player);
+        })
+      )
+    } catch(error) {
+      throw new RpcException(error.message);
+    }
   }
 }

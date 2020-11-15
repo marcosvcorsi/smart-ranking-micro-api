@@ -31,4 +31,8 @@ export class RankingsRepository {
 
     await ranking.save()
   }
+
+  async findAllByCategory(categoryId: string) {
+    return this.rankingModel.find().where('category').equals(categoryId);
+  }
 }

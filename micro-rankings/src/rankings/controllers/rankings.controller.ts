@@ -22,4 +22,18 @@ export class RankingsController {
 
     await channel.ack(originalMsg);
   }
+
+  @EventPattern('find-rankings')
+  async findAll(@Payload() data: any, @Ctx() context: RmqContext) {
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+
+    try {
+      const { categoryId, dateRef } = data;
+
+      return this.rankingsService.findAll(categoryId, dateRef);
+    } finally {
+      await channel.ack(originalMsg);
+    }
+  }
 }

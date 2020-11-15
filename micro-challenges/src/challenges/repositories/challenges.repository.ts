@@ -49,4 +49,24 @@ export class ChallengesRepository {
   async update(id: string, challenge: Challenge): Promise<void> {
     await this.challengeModel.update({_id: id}, {$set: challenge})
   }
+
+  async findAllByCategory(category: string) {
+    return this.challengeModel.find()
+                              .where('category')
+                              .equals(category)
+                              .where('status')
+                              .equals(StatusChallenge.DONE)
+                              .exec()
+  }
+
+  async findAllByCategoryAndDate(category: string, dateRef: string) {
+    return this.challengeModel.find()
+                              .where('category')
+                              .equals(category)
+                              .where('status')
+                              .equals(StatusChallenge.DONE)
+                              .where('dateTimeChallenge')
+                              .lte(dateRef)
+                              .exec()
+  }
 }

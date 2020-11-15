@@ -73,4 +73,17 @@ export class ChallengesService {
       throw new RpcException(error.message)
     }
   }
+
+  async findAllByCategoryAndDateRef(category: string, dateRef: string) {
+    if(!dateRef) {
+      return  this.challengesRepository.findAllByCategory(category);
+    }
+
+    const date = new Date(`${dateRef} 23:59:59.999`)
+    const dateFormatted = date.toISOString();
+
+    console.log(dateFormatted);
+
+    return this.challengesRepository.findAllByCategoryAndDate(category, dateFormatted);
+  }
 }

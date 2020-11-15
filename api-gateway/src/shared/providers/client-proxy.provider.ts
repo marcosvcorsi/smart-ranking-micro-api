@@ -26,4 +26,14 @@ export class ClientProxyProvider {
       }
     })
   }
+
+  getRankingInstance() {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [this.configService.get<string>('RMQ_URL')],
+        queue: 'rankings'
+      }
+    })
+  }
 }

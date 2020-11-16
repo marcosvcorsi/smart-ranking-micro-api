@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { Types } from 'mongoose';
+import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
 import { CreateChallengeDto } from '../dtos/create-challenge.dto';
 import { Challenge, StatusChallenge } from '../models/challenge.schema';
 import { ChallengesRepository } from '../repositories/challenges.repository';
@@ -8,11 +9,16 @@ import { ChallengesRepository } from '../repositories/challenges.repository';
 @Injectable()
 export class ChallengesService {
 
-  constructor(private readonly challengesRepository:ChallengesRepository) {}
+  constructor(
+    private readonly challengesRepository:ChallengesRepository,
+    private readonly clientProxy: ClientProxyProvider
+  ) {}
 
   async create(createChallengeDto: CreateChallengeDto) {
     try {
       await this.challengesRepository.create(createChallengeDto);
+
+      return this.clientProxy.getNotificationsInstance().emit('notifications-new-challenge', createChallengeDto).toPromise();
     } catch(error) {
       throw new RpcException(error.message);
     }
@@ -81,8 +87,6 @@ export class ChallengesService {
 
     const date = new Date(`${dateRef} 23:59:59.999`)
     const dateFormatted = date.toISOString();
-
-    console.log(dateFormatted);
 
     return this.challengesRepository.findAllByCategoryAndDate(category, dateFormatted);
   }

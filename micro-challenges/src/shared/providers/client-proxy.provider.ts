@@ -36,4 +36,14 @@ export class ClientProxyProvider {
       }
     })
   }
+
+  getNotificationsInstance() {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [this.configService.get<string>('RMQ_URL')],
+        queue: 'notifications'
+      }
+    })
+  }
 }

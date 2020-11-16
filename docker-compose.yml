@@ -1,13 +1,25 @@
 version: "3"
 services:
   mongo:
+    container_name: mongodb_container
     image: mongo
     ports:
       - 27017:27017
-    container_name: mongodb_container
   rabbitmq:
+    container_name: rabbitmq_container
     image: rabbitmq:3-management
     ports:
       - 5672:5672
       - 15672:15672
-    container_name: rabbitmq_container
+  api-gateway:
+    container_name: api-gateway_container
+    build: ./api-gateway/
+    image: api-gateway_container
+    ports:
+      - 3333:3333
+    environment:
+      - RMQ_URL=amqp://guest:guest@rabbitmq:5672/smart-ranking
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq

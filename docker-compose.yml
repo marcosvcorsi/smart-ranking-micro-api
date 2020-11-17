@@ -13,6 +13,7 @@ services:
       - 15672:15672
   api-gateway:
     container_name: api-gateway_container
+    restart: on-failure
     build: ./api-gateway/
     image: api-gateway_container
     ports:
@@ -22,4 +23,18 @@ services:
     depends_on:
       - rabbitmq
     links:
+      - rabbitmq
+  micro-admin-server:
+    container_name: micro-admin-server_container
+    build: ./micro-admin-server/
+    image: micro-admin-server_container
+    restart: on-failure
+    environment:
+      - RMQ_URL=amqp://guest:guest@rabbitmq:5672/smart-ranking
+      - MONGO_URI=mongodb://mongo:27017/sr-admin-server
+    depends_on:
+      - mongo
+      - rabbitmq
+    links:
+      - mongo
       - rabbitmq

@@ -24,6 +24,17 @@ services:
       - rabbitmq
     links:
       - rabbitmq
+  micro-notifications:
+    container_name: micro-notifications_container
+    restart: on-failure
+    build: ./micro-notifications/
+    image: micro-notifications_container
+    environment:
+      - RMQ_URL=amqp://guest:guest@rabbitmq:5672/smart-ranking
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
   micro-admin-server:
     container_name: micro-admin-server_container
     build: ./micro-admin-server/
@@ -32,6 +43,34 @@ services:
     environment:
       - RMQ_URL=amqp://guest:guest@rabbitmq:5672/smart-ranking
       - MONGO_URI=mongodb://mongo:27017/sr-admin-server
+    depends_on:
+      - mongo
+      - rabbitmq
+    links:
+      - mongo
+      - rabbitmq
+  micro-challenges:
+    container_name: micro-challenges_container
+    build: ./micro-challenges/
+    image: micro-challenges_container
+    restart: on-failure
+    environment:
+      - RMQ_URL=amqp://guest:guest@rabbitmq:5672/smart-ranking
+      - MONGO_URI=mongodb://mongo:27017/sr-challenges
+    depends_on:
+      - mongo
+      - rabbitmq
+    links:
+      - mongo
+      - rabbitmq
+  micro-rankings:
+    container_name: micro-rankings_container
+    build: ./micro-rankings/
+    image: micro-rankings_container
+    restart: on-failure
+    environment:
+      - RMQ_URL=amqp://guest:guest@rabbitmq:5672/smart-ranking
+      - MONGO_URI=mongodb://mongo:27017/sr-ranking
     depends_on:
       - mongo
       - rabbitmq

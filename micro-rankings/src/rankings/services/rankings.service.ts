@@ -19,6 +19,10 @@ export class RankingsService {
   private getEventProps(category: any, eventName: string) {
     const event = category.events.find(event => event.name === eventName);
 
+    if(!event) {
+      return null;
+    }
+
     const { name, value, operation } = event;
 
     return {
@@ -33,9 +37,13 @@ export class RankingsService {
       await Promise.all(match.players.map(async player => {
           const category = await this.clientProxy.getAdminServerInstance().send('find-categories', match.category).toPromise();
 
-          const { name, operation, value } = this.getEventProps(category, player === match.def ? EventName.VICTORY : EventName.DEFEAT);
+          const event = this.getEventProps(category, player === match.def ? EventName.VICTORY : EventName.DEFEAT);
 
-          return this.rankingsRepository.create({match, matchId, player, value, operation, name });
+          if(event) {
+            const { name, operation, value } = event;
+
+            return this.rankingsRepository.create({match, matchId, player, value, operation, name });
+          }
         })
       )
     } catch(error) {

@@ -1,4 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Observable } from 'rxjs';
 import { AwsService } from 'src/aws/services/aws.service';
@@ -15,6 +16,7 @@ export class PlayersController {
   ) {}
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   findAllPlayers(): Observable<any> {
     return this.clientProxyProvider.getAdminServerInstance().send('find-players', '')
   }

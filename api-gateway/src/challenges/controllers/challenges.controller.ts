@@ -1,4 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
 import { AddChallengeMatchDto } from '../dtos/add-challenge-match.dto';
 import { StatusChallenge } from '../dtos/challenge.dto';
@@ -6,6 +7,7 @@ import { CreateChallengeDto } from '../dtos/create-challenge.dto';
 import { MatchDto } from '../dtos/match.dto';
 import { UpdateChallengeDto } from '../dtos/update-challenge.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/challenges')
 export class ChallengesController {
 

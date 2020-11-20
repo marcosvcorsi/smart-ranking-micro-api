@@ -7,6 +7,7 @@ import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider'
 import { CreatePlayerDto } from '../dtos/create-player.dto';
 import { UpdatePlayerDto } from '../dtos/update-player.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/players')
 export class PlayersController {
 
@@ -16,7 +17,6 @@ export class PlayersController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   findAllPlayers(): Observable<any> {
     return this.clientProxyProvider.getAdminServerInstance().send('find-players', '')
   }

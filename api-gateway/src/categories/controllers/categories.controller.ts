@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider';
 import { CreateCategoryDto } from '../dtos/create-category.dto';
 import { UpdateCategoryDto } from '../dtos/update-category.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('api/v1/categories')
 export class CategoriesController {
 
